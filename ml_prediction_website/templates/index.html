@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Exam Performance Indicator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+    --ink:#20263a;
+    --muted:#5f6a7f;
+    --primary:#d95b2d;
+    --primary-deep:#b4471f;
+    --teal:#177d73;
+    --surface:#fff9f0;
+    --card:#ffffffd6;
+    --line:#e9ddca;
+    --focus:#ffd9c3;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    min-height:100svh;
+    font-family:'Space Grotesk', sans-serif;
+    color:var(--ink);
+    padding:clamp(14px, 3vw, 28px);
+    display:grid;
+    place-items:center;
+    overflow-x:hidden;
+    background:
+        radial-gradient(900px 420px at -15% -20%, #ffd6bf 0%, transparent 62%),
+        radial-gradient(820px 380px at 115% 6%, #d5f0e7 0%, transparent 60%),
+        linear-gradient(180deg, #fff8ef 0%, #f3f6fb 100%);
+}
+
+body::before,
+body::after{
+    content:'';
+    position:fixed;
+    pointer-events:none;
+}
+
+body::before{
+    width:290px;
+    height:290px;
+    top:14%;
+    left:-110px;
+    border-radius:39% 61% 50% 50%;
+    opacity:0.3;
+    filter:blur(4px);
+    background:conic-gradient(from 130deg, #ffd4bd, #ffe7d8, #d8efe8, #ffd4bd);
+}
+
+body::after{
+    width:340px;
+    height:340px;
+    right:-150px;
+    bottom:8%;
+    opacity:0.35;
+    background:radial-gradient(circle at 30% 30%, #f7c1a7 0%, #f6ddca 45%, transparent 70%);
+}
+
+.stage{
+    position:relative;
+    z-index:1;
+    width:min(1080px, 100%);
+    max-height:calc(100svh - clamp(20px, 5vw, 46px));
+    display:grid;
+    grid-template-columns:minmax(300px, 390px) 1fr;
+    gap:clamp(14px, 2vw, 22px);
+}
+
+.stage > section{
+    opacity:0;
+    transform:translateY(16px);
+    animation:rise 0.68s cubic-bezier(0.25, 0.8, 0.3, 1) forwards;
+}
+
+.stage > section:nth-child(2){
+    animation-delay:0.14s;
+}
+
+.hero-panel{
+    border-radius:28px;
+    border:1px solid rgba(217, 91, 45, 0.2);
+    padding:clamp(22px, 3vw, 34px);
+    background:linear-gradient(160deg, #fff4eb 0%, #ffe7d7 52%, #f8f2e6 100%);
+    box-shadow:0 14px 36px rgba(50, 45, 33, 0.12);
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.eyebrow{
+    width:fit-content;
+    font-size:0.76rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--primary-deep);
+    background:rgba(217, 91, 45, 0.12);
+    border:1px solid rgba(217, 91, 45, 0.24);
+    padding:6px 11px;
+    border-radius:999px;
+}
+
+.hero-panel h1{
+    font-family:'Fraunces', serif;
+    font-size:clamp(1.9rem, 3.1vw, 2.55rem);
+    line-height:1.14;
+    letter-spacing:0.01em;
+}
+
+.hero-panel h1 span{
+    color:var(--primary-deep);
+}
+
+.intro{
+    color:var(--muted);
+    font-size:0.98rem;
+    line-height:1.62;
+}
+
+.metric-grid{
+    display:grid;
+    gap:10px;
+}
+
+.metric-card{
+    border-radius:14px;
+    padding:11px 13px;
+    background:rgba(255, 255, 255, 0.68);
+    border:1px solid rgba(232, 202, 179, 0.82);
+}
+
+.metric-card strong{
+    display:block;
+    font-size:0.95rem;
+    margin-bottom:2px;
+}
+
+.metric-card small{
+    color:var(--muted);
+    font-size:0.82rem;
+    line-height:1.4;
+}
+
+.hint{
+    margin-top:auto;
+    border-radius:12px;
+    padding:10px 12px;
+    background:rgba(23, 125, 115, 0.11);
+    color:#1f645c;
+    font-size:0.84rem;
+    font-weight:600;
+}
+
+.form-panel{
+    border-radius:28px;
+    overflow:hidden;
+    border:1px solid rgba(255, 255, 255, 0.86);
+    background:var(--card);
+    backdrop-filter:blur(12px);
+    box-shadow:0 22px 52px rgba(33, 45, 64, 0.17);
+}
+
+.predict-form{
+    height:100%;
+    overflow-y:auto;
+    padding:clamp(22px, 3vw, 34px);
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.form-head{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.form-head h2{
+    font-family:'Fraunces', serif;
+    font-size:clamp(1.44rem, 2.2vw, 1.86rem);
+    line-height:1.2;
+}
+
+.form-head p{
+    color:var(--muted);
+    font-size:0.95rem;
+}
+
+.field-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:14px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    opacity:0;
+    transform:translateY(10px);
+    animation:fadeUp 0.44s ease forwards;
+}
+
+.field:nth-child(1){animation-delay:0.18s;}
+.field:nth-child(2){animation-delay:0.23s;}
+.field:nth-child(3){animation-delay:0.28s;}
+.field:nth-child(4){animation-delay:0.33s;}
+.field:nth-child(5){animation-delay:0.38s;}
+.field:nth-child(6){animation-delay:0.43s;}
+.field:nth-child(7){animation-delay:0.48s;}
+.field:nth-child(8){animation-delay:0.53s;}
+
+.field.full{
+    grid-column:1 / -1;
+}
+
+label{
+    font-size:0.78rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:#384158;
+}
+
+select,
+input{
+    width:100%;
+    min-height:48px;
+    border-radius:13px;
+    border:1px solid var(--line);
+    background:linear-gradient(180deg, #ffffff 0%, #fffaf3 100%);
+    color:var(--ink);
+    padding:10px 12px;
+    font:500 0.95rem 'Space Grotesk', sans-serif;
+    transition:border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+select:focus,
+input:focus{
+    outline:none;
+    border-color:var(--primary);
+    box-shadow:0 0 0 4px var(--focus);
+}
+
+.submit-wrap{
+    margin-top:3px;
+}
+
+.submit-btn{
+    width:100%;
+    border:none;
+    border-radius:14px;
+    min-height:56px;
+    padding:12px 14px;
+    color:#fff;
+    text-align:left;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    background:linear-gradient(122deg, var(--primary) 0%, #de7545 48%, var(--teal) 100%);
+    font-family:'Space Grotesk', sans-serif;
+    transition:transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.submit-btn span{
+    font-size:1rem;
+    font-weight:700;
+}
+
+.submit-btn small{
+    font-size:0.8rem;
+    font-weight:600;
+    opacity:0.9;
+}
+
+.submit-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 24px rgba(185, 71, 31, 0.32);
+    filter:saturate(1.04);
+}
+
+.submit-btn:active{
+    transform:translateY(0);
+}
+
+@media (max-width:980px){
+    body{
+        padding:12px;
+    }
+
+    .stage{
+        grid-template-columns:1fr;
+        max-height:none;
+    }
+}
+
+@media (max-width:640px){
+    .field-grid{
+        grid-template-columns:1fr;
+    }
+
+    .submit-btn{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:2px;
+    }
+}
+
+@media (prefers-reduced-motion:reduce){
+    *,
+    *::before,
+    *::after{
+        animation:none !important;
+        transition:none !important;
+    }
+}
+
+@keyframes rise{
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+@keyframes fadeUp{
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<main class="stage">
+<section class="hero-panel">
+<p class="eyebrow">Exam Insight Studio</p>
+<h1>Forecast maths outcomes with a <span>signature score profile</span></h1>
+<p class="intro">This model blends student background context with reading and writing performance to estimate likely maths score in seconds.</p>
+
+<div class="metric-grid">
+<article class="metric-card">
+<strong>Fast estimate</strong>
+<small>Generate a score prediction instantly from the latest values.</small>
+</article>
+<article class="metric-card">
+<strong>Profile-aware</strong>
+<small>Learner context and preparation details are included in the prediction path.</small>
+</article>
+<article class="metric-card">
+<strong>Practice-ready</strong>
+<small>Use the output to identify where to focus before the next exam cycle.</small>
+</article>
+</div>
+
+<p class="hint">Tip: realistic reading and writing inputs usually produce a sharper estimate.</p>
+</section>
+
+<section class="form-panel">
+<form action="{% url 'result' %}" method="post" class="predict-form">
+{% csrf_token %}
+
+<div class="form-head">
+<h2>Student Exam Performance Prediction</h2>
+<p>Enter details below and run the model.</p>
+</div>
+
+<div class="field-grid">
+<div class="field">
+<label for="gender">Gender</label>
+<select id="gender" name="gender" required>
+<option selected disabled value="">Select Gender</option>
+<option value="male">Male</option>
+<option value="female">Female</option>
+</select>
+</div>
+
+<div class="field">
+<label for="race_ethnicity">Race or Ethnicity</label>
+<select id="race_ethnicity" name="race_ethnicity" required>
+<option selected disabled value="">Select Ethnicity</option>
+<option value="group A">Group A</option>
+<option value="group B">Group B</option>
+<option value="group C">Group C</option>
+<option value="group D">Group D</option>
+<option value="group E">Group E</option>
+</select>
+</div>
+
+<div class="field full">
+<label for="parental_level_of_education">Parental Level of Education</label>
+<select id="parental_level_of_education" name="parental_level_of_education" required>
+<option selected disabled value="">Select Parent Education</option>
+<option value="associate's degree">associate's degree</option>
+<option value="bachelor's degree">bachelor's degree</option>
+<option value="high school">high school</option>
+<option value="master's degree">master's degree</option>
+<option value="some college">some college</option>
+<option value="some high school">some high school</option>
+</select>
+</div>
+
+<div class="field">
+<label for="lunch">Lunch Type</label>
+<select id="lunch" name="lunch" required>
+<option selected disabled value="">Select Lunch Type</option>
+<option value="free/reduced">free/reduced</option>
+<option value="standard">standard</option>
+</select>
+</div>
+
+<div class="field">
+<label for="test_preparation_course">Test Preparation Course</label>
+<select id="test_preparation_course" name="test_preparation_course" required>
+<option selected disabled value="">Select Test Course</option>
+<option value="none">None</option>
+<option value="completed">Completed</option>
+</select>
+</div>
+
+<div class="field">
+<label for="reading_score">Reading Score out of 100</label>
+<input id="reading_score" type="number" name="reading_score" min="0" max="100" required>
+</div>
+
+<div class="field">
+<label for="writing_score">Writing Score out of 100</label>
+<input id="writing_score" type="number" name="writing_score" min="0" max="100" required>
+</div>
+
+<div class="field full submit-wrap">
+<button class="submit-btn" type="submit">
+<span>Predict Maths Score</span>
+<small>Run model now</small>
+</button>
+</div>
+</div>
+
+</form>
+</section>
+</main>
+
+</body>
+</html>
