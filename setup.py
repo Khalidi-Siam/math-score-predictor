@@ -13,7 +13,7 @@ def get_requirements(file_path: str) -> List[str]:
     return requirements
 
 setup(
-    name='ml_project',
+    name='math-score-predictor',
     version='0.0.1',
     packages=find_packages(),
     author='Khalidi Siam',

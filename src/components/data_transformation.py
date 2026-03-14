@@ -14,11 +14,9 @@ import os
 
 from src.utils import save_object
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 @dataclass
 class DataTransformationConfig:
-    preprocessor_obj_file_path = os.path.join(PROJECT_ROOT, 'artifacts', 'preprocessor.pkl')
+    preprocessor_obj_file_path = os.path.join('artifacts', 'preprocessor.pkl')
     
 class DataTransformation:
     def __init__(self):

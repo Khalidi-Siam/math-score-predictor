@@ -15,11 +15,10 @@ from src.logger import logging
 from src.utils import save_object, evaluate_models
 
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 @dataclass
 class ModelTrainerConfig:
-    trained_model_file_path = os.path.join(PROJECT_ROOT, 'artifacts', 'model.pkl')
+    trained_model_file_path = os.path.join('artifacts', 'model.pkl')
 
 class ModelTrainer:
     def __init__(self):
