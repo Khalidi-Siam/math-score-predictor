@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from src.pipeline.predict_pipeline import CustomData, PredictPipeline
+from ml_prediction_website import settings
+
+predict_pipeline = PredictPipeline(settings.ML_ARTIFACT_DIR)
 
 def index(request):
     return render(request, 'index.html')
@@ -34,7 +37,7 @@ def result(request):
             writing_score=writing_score
         )
         pred_df = data.get_data_as_data_frame()
-        predict_pipeline = PredictPipeline()
+        # predict_pipeline = PredictPipeline()
         math_score = predict_pipeline.predict(pred_df)[0]
 
     return render(request, 'result.html', {
