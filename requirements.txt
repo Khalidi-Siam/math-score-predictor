@@ -4,4 +4,4 @@ scikit-learn
 dill
 django
 gunicorn
--e .
+.
