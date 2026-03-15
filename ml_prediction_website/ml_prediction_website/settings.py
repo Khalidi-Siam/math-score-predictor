@@ -23,10 +23,10 @@ ML_ARTIFACT_DIR = Path(os.getenv("ML_ARTIFACT_DIR", PROJECT_ROOT / "artifacts"))
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3z^%l06&9qd-4)9(gvw6tyr_4f!p(+mv-6x5a*^_=ku6h#-s2y'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 ALLOWED_HOSTS = ["*"]
 
